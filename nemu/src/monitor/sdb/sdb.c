@@ -39,6 +39,18 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+// static int cmd_si(char *args);
+
+// static int cmd_info(char *args);
+
+// static int cmd_scan_mem(char *args);
+
+// static int cmd_expr(char *args);
+
+// static int cmd_w(char *args);
+
+// static int cmd_rm_w(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -47,9 +59,12 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
-  /* TODO: Add more commands */
-
+  // { "si [N]", "Make progress to run N instructions. If N is no be given, the default number of N is 1", cmd_si },
+  // { "info SUBCMD", "Print the status of registers or the status of watchpoint", cmd_info },
+  // { "x N EXPR", "Output N 4bytes from the initial address defined by the result of EXPR", cmd_scan_mem },
+  // { "p EXPR", "Calculate EXPR", cmd_expr},
+  // { "w EXPR", "Stop progress when the number of EXPR has changed", cmd_w},
+  // { "d N", "Delete watchpoint whose number equals N", cmd_rm_w},
 };
 
 #define NR_CMD ARRLEN(cmd_table)
@@ -76,6 +91,20 @@ static int cmd_help(char *args) {
   }
   return 0;
 }
+
+// static int cmd_si(char *args) {
+  
+// }
+
+// static int cmd_info(char *args) {}
+
+// static int cmd_scan_mem(char *args){}
+
+// static int cmd_expr(char *args) {}
+
+// static int cmd_w(char *args) {}
+
+// static int cmd_rm_w(char *args) {}
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;
