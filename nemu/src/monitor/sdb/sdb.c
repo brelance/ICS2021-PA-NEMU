@@ -2,7 +2,8 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "sdb.h"
+#include <memory/paddr.h>
+#include "../local-include/reg.h"
 
 static int is_batch_mode = false;
 
@@ -40,14 +41,43 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 static int cmd_si(char *args) {
-  int n = (int)*args;
+  int n = 1;
+  if (args != NULL ) {
+    n = (int)*args;
+  }
+  printf("%d", n);
   cpu_exec(n);
   return 0;
 }
 
-// static int cmd_info(char *args) {}
+static int cmd_info(char *args) {
+  char subcmd = *args;
+  switch (subcmd)
+  {
+  case 'r':
+    isa_reg_display();
+    break;
+  case 'w':
+    break;
+  default:
+    printf("Unknown command info '%c'\n", subcmd);
+    return -1;
+  }
+  return 0;
+}
 
-// static int cmd_scan_mem(char *args){}
+static int cmd_scan_mem(char *args) {
+  char *save_ptr;
+  strtok_r(args, " ", &save_ptr);
+  int n = (int) *args;
+  uint64_t addr = (uint64_t)save_ptr;
+  for (int i = 0; i < n; i++) {
+    uint64_t mem = paddr_read(addr, 4);
+    printf("%lu: %lu\n", addr, mem);
+    addr += 8;
+  }
+  return 0;
+}
 
 // static int cmd_expr(char *args) {}
 
@@ -75,8 +105,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Make progress to run N instructions. If N is no be given, the default number of N is 1", cmd_si },
-  // { "info SUBCMD", "Print the status of registers or the status of watchpoint", cmd_info },
-  // { "x N EXPR", "Output N 4bytes from the initial address defined by the result of EXPR", cmd_scan_mem },
+  { "info", "Print the status of registers or the status of watchpoint", cmd_info },
+  { "x", "Output N 4bytes from the initial address defined by the result of EXPR", cmd_scan_mem },
   // { "p EXPR", "Calculate EXPR", cmd_expr},
   // { "w EXPR", "Stop progress when the number of EXPR has changed", cmd_w},
   // { "d N", "Delete watchpoint whose number equals N", cmd_rm_w},
