@@ -3,7 +3,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <memory/paddr.h>
-#include "../local-include/reg.h"
 
 static int is_batch_mode = false;
 
