@@ -42,7 +42,7 @@ static int cmd_help(char *args);
 static int cmd_si(char *args) {
   int n = 1;
   if (args != NULL ) {
-    n = (int)*args;
+    n = sscanf(args, "%d", &n);
   }
   printf("%d", n);
   cpu_exec(n);
@@ -68,8 +68,8 @@ static int cmd_info(char *args) {
 static int cmd_scan_mem(char *args) {
   char *save_ptr;
   strtok_r(args, " ", &save_ptr);
-  int n = *args;
-  uint64_t addr = *save_ptr;
+  int n = atoi(args);
+  uint64_t addr = atoi(save_ptr);
   for (int i = 0; i < n; i++) {
     uint64_t mem = paddr_read(addr, 4);
     printf("%lu: %lu\n", addr, mem);
