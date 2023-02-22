@@ -66,10 +66,12 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_scan_mem(char *args) {
+  int n;
+  uint64_t addr;
   char *save_ptr;
   strtok_r(args, " ", &save_ptr);
-  int n = atoi(args);
-  uint64_t addr = atoi(save_ptr);
+  sscanf(args, "%d", &n);
+  sscanf(save_ptr, "%lu", &addr);
   for (int i = 0; i < n; i++) {
     uint64_t mem = paddr_read(addr, 4);
     printf("%lu: %lu\n", addr, mem);
