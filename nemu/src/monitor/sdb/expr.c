@@ -191,7 +191,7 @@ int eval(int p, int q)
 {
   if (p < q)
   {
-    printf("bad expression, left border %d < right border %d", p, q);
+    printf("bad expression: left border %d < right border %d", p, q);
     return -1;
   }
   else if (p == q)
@@ -206,20 +206,20 @@ int eval(int p, int q)
   {
     if (tokens[p].type == TK_NUM || tokens[p].type == TK_REG) {
       if (tokens[p].type == TK_REG) {
-        u_int64_t reg = isa_reg_read(tokens[p].str);
+        *tokens[p].str = isa_reg_read(tokens[p].str);
       }
       switch (tokens[p + 1].type)
       {
       case TK_PLUS:
-        return (int)tokens[p].str - eval(p + 2, q);
+        return (uint64_t)tokens[p].str - eval(p + 2, q);
       case TK_MINUS:
-        return (int)tokens[p].str - eval(p + 2, q);
+        return (uint64_t)tokens[p].str - eval(p + 2, q);
       case TK_ASTERISK:
-        return (int)tokens[p].str * eval(p + 2, q);
+        return (uint64_t)tokens[p].str * eval(p + 2, q);
       case TK_SLASH:
-        return (int)tokens[p].str / eval(p + 2, q);
+        return (uint64_t)tokens[p].str / eval(p + 2, q);
       default:
-        printf("bad expression");
+        pruint64_tf("bad expression: please check your input");
         break;
       }
     }
@@ -233,6 +233,7 @@ word_t expr(char *e, bool *success)
     *success = false;
     return 0;
   }
+  
 
   return 0;
 }
