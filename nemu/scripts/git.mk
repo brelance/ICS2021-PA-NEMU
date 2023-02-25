@@ -1,6 +1,5 @@
 STUID = brelance82@gmail.com
 STUNAME = brelance
-SS = test
 
 # DO NOT modify the following code!!!
 
