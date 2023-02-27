@@ -37,7 +37,7 @@ static struct rule
     {"\\(", TK_LPAREN},
     {"\\)", TK_RPAREN},
     {"[\\d]+", TK_NUM},
-    {"\\$(0|\\w\\d)", TK_REG},
+    {"\\$(0|[a-z][0-9])", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -72,6 +72,7 @@ typedef struct token
 
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
+static int token_point = 0;
 
 static bool make_token(char *e)
 {
@@ -101,11 +102,14 @@ static bool make_token(char *e)
          * of tokens, some extra actions should be performed.
          */
 
+        if (rules[i].token_type == TK_NOTYPE) {
+          break;
+        }
+
+        strncpy(tokens[token_point].str, substr_start, substr_len);
+
         switch (rules[i].token_type)
         {
-        case TK_NOTYPE:
-          break;
-
         case TK_EQ:
           tokens[i].type = TK_EQ;
           break;
@@ -140,17 +144,16 @@ static bool make_token(char *e)
 
         case TK_REG:
           tokens[i].type = TK_ASTERISK;
-          strncpy(tokens[i].str, substr_start, substr_len);
           break;
 
         case TK_NUM:
           tokens[i].type = TK_NUM;
-          strncpy(tokens[i].str, substr_start, substr_len);
           break;
 
         default:
           break;
         }
+        break;
       }
     }
 
