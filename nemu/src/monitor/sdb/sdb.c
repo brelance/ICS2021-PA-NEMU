@@ -3,6 +3,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <memory/paddr.h>
+#include "sdb.h"
 
 static int is_batch_mode = false;
 
@@ -79,7 +80,18 @@ static int cmd_scan_mem(char *args) {
   return 0;
 }
 
-// static int cmd_expr(char *args) {}
+static int cmd_expr(char *args) {
+  bool success;
+  uint64_t result = expr(args, &success);
+  if(success == true) {
+    printf("Expr result: %lu", result);
+  }
+  else {
+    printf("a error occur");
+    return -1;
+  }
+  return 0;
+}
 
 // static int cmd_w(char *args) {}
 
@@ -107,7 +119,7 @@ static struct {
   { "si", "Make progress to run N instructions. If N is no be given, the default number of N is 1", cmd_si },
   { "info", "Print the status of registers or the status of watchpoint", cmd_info },
   { "x", "Output N 4bytes from the initial address defined by the result of EXPR", cmd_scan_mem },
-  // { "p EXPR", "Calculate EXPR", cmd_expr},
+  { "p EXPR", "Calculate EXPR", cmd_expr},
   // { "w EXPR", "Stop progress when the number of EXPR has changed", cmd_w},
   // { "d N", "Delete watchpoint whose number equals N", cmd_rm_w},
 };

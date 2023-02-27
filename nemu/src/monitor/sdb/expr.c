@@ -1,6 +1,6 @@
 #include <isa.h>
 #include <string.h>
-#include <sdb.h>
+#include "sdb.h"
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -187,7 +187,7 @@ bool check_parentheses(int p, int q)
   return lcount == 1 && tokens[i].type == TK_RPAREN;
 }
 
-int eval(int p, int q)
+uint64_t eval(int p, int q)
 {
   if (p < q)
   {
@@ -196,7 +196,7 @@ int eval(int p, int q)
   }
   else if (p == q)
   {
-    return (int)tokens[p].str;
+    return strtoul(tokens[p].str, NULL, 10);
   }
   else if (check_parentheses(p, q))
   {
@@ -206,7 +206,8 @@ int eval(int p, int q)
   {
     if (tokens[p].type == TK_NUM || tokens[p].type == TK_REG) {
       if (tokens[p].type == TK_REG) {
-        *tokens[p].str = isa_reg_read(tokens[p].str);
+        uint64_t reg = isa_reg_read(tokens[p].str);
+        sprintf(tokens[p].str, "%lu", reg);
       }
       switch (tokens[p + 1].type)
       {
@@ -219,21 +220,28 @@ int eval(int p, int q)
       case TK_SLASH:
         return (uint64_t)tokens[p].str / eval(p + 2, q);
       default:
-        pruint64_tf("bad expression: please check your input");
-        break;
+        printf("bad expression: please check your input");
+        return -1;
       }
     }
   }
+  return -1;
 }
 
-word_t expr(char *e, bool *success)
+
+
+// word_t
+uint64_t expr(char *e, bool *success)
 {
   if (!make_token(e))
   {
     *success = false;
     return 0;
   }
-  
 
-  return 0;
+  int end = 0;
+  while (tokens[end].type != 0) {
+    end++;
+  }
+  return eval(0, end - 1);
 }
