@@ -119,7 +119,7 @@ static struct {
   { "si", "Make progress to run N instructions. If N is no be given, the default number of N is 1", cmd_si },
   { "info", "Print the status of registers or the status of watchpoint", cmd_info },
   { "x", "Output N 4bytes from the initial address defined by the result of EXPR", cmd_scan_mem },
-  { "p EXPR", "Calculate EXPR", cmd_expr},
+  { "p", "Calculate EXPR", cmd_expr},
   // { "w EXPR", "Stop progress when the number of EXPR has changed", cmd_w},
   // { "d N", "Delete watchpoint whose number equals N", cmd_rm_w},
 };
