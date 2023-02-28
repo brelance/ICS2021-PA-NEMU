@@ -17,7 +17,7 @@ void isa_reg_display() {
   }
 }
 
-uint64_t (char *reg_name) {
+uint64_t isa_reg_read(char *reg_name) {
   int idx;
   for (idx = 0; idx < REG_NUMS; idx++) {
     if (reg_name == regs[idx]) {
