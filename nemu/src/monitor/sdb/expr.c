@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <isa.h>
+#include <common.h>
 
 typedef unsigned long uint64_t;
 
