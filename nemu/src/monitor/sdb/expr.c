@@ -266,9 +266,7 @@ uint64_t eval(int p, int q)
           tokens[p - 1].type = TK_PLUS;
           return num;
         }
-        int test = num + eval(p + 2, q);
-        // return num + eval(p + 2, q);
-        return test;
+        return num + eval(p + 2, q);
       case TK_MINUS:;
         if (tokens[p - 1].type != TK_PLUS && tokens[p - 1].type != TK_MINUS && tokens[p - 1].type != TK_LPAREN && tokens[p - 1].type != TK_NUM)
         {
@@ -355,6 +353,7 @@ uint64_t expr(char *e, bool *success)
       tokens[i].type = TK_DREF;
     }
   }
-
+  
+  *success = true;
   return eval(0, nr_token - 1);
 }
