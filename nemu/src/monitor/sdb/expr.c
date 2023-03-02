@@ -257,8 +257,9 @@ uint64_t eval(int p, int q)
 
       switch (tokens[p + 1].type)
       {
-      case TK_DREF:
-        // TODO:
+      case TK_DREF: ;
+       uint64_t addr = eval(p + 2, q);
+       return paddr_read(addr, 1);
         break;
       case TK_PLUS:
         if (tokens[p - 1].type != TK_PLUS && tokens[p - 1].type != TK_MINUS && tokens[p - 1].type != TK_LPAREN && tokens[p - 1].type != TK_NUM)
@@ -353,7 +354,7 @@ uint64_t expr(char *e, bool *success)
       tokens[i].type = TK_DREF;
     }
   }
-  
+
   *success = true;
   return eval(0, nr_token - 1);
 }

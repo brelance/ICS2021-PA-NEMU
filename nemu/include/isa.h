@@ -12,6 +12,8 @@ typedef concat(__GUEST_ISA__, _ISADecodeInfo) ISADecodeInfo;
 // monitor
 extern char isa_logo[];
 void init_isa();
+void check_watchpoint();
+
 
 
 // reg
