@@ -266,7 +266,9 @@ uint64_t eval(int p, int q)
           tokens[p - 1].type = TK_PLUS;
           return num;
         }
-        return num + eval(p + 2, q);
+        int test = num + eval(p + 2, q);
+        // return num + eval(p + 2, q);
+        return test;
       case TK_MINUS:;
         if (tokens[p - 1].type != TK_PLUS && tokens[p - 1].type != TK_MINUS && tokens[p - 1].type != TK_LPAREN && tokens[p - 1].type != TK_NUM)
         {
