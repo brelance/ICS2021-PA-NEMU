@@ -53,7 +53,7 @@ typedef struct token
 } Token;
 
 static Token tokens[32] __attribute__((used)) = {};
-static int nr_token = 0;
+static int nr_token __attribute__((used)) = 0;
 
 void print_tokne(Token *t)
 {
@@ -254,6 +254,7 @@ uint64_t eval(int p, int q)
       }
 
       uint64_t num = strtoul(tokens[p].str, NULL, 10);
+
       switch (tokens[p + 1].type)
       {
       case TK_DREF:
