@@ -29,7 +29,6 @@ static struct rule
   const char *regex;
   int token_type;
 } rules[] = {
-    {"[0-9]+", TK_NUM},
     {" ", TK_NOTYPE}, // spaces
     {"==", TK_EQ},    // equal|
     {"!=", TK_NEQ},
@@ -41,6 +40,7 @@ static struct rule
     {"\\(", TK_LPAREN},
     {"\\)", TK_RPAREN},
     {"\\$(0|[a-z][0-9])", TK_REG},
+    {"[0-9]+", TK_NUM},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -82,7 +82,6 @@ static bool make_token(char *e)
   int position = 0;
   int i;
   regmatch_t pmatch;
-  int token_point = 0;
 
   nr_token = 0;
 
@@ -105,7 +104,7 @@ static bool make_token(char *e)
           break;
         }
 
-        strncpy(tokens[token_point].str, substr_start, substr_len);
+        strncpy(tokens[nr_token].str, substr_start, substr_len);
 
         switch (rules[i].token_type)
         {
