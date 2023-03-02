@@ -11,15 +11,17 @@ typedef unsigned long uint64_t;
 enum
 {
   TK_NOTYPE = 256,
+  TK_DREF, //decode dreference
   TK_EQ,       // "=="
   TK_NEQ,      // "!="
-  TK_PLUS,     // "+"
-  TK_MINUS,    // "-"
+  TK_AND,
   TK_ASTERISK, // "*"
   TK_SLASH,    // "/"
+  TK_PLUS,     // "+"
+  TK_MINUS,    // "-"
   TK_LPAREN,   // "("
   TK_RPAREN,   // ")"
-
+  TK_DREF, //*a
   TK_REG, // registers
   TK_NUM, // decimal number
 };
@@ -31,8 +33,9 @@ static struct rule
 } rules[] = {
     {"[0-9]+", TK_NUM},
     {" ", TK_NOTYPE}, // spaces
-    {"==", TK_EQ},    // equal
-    {"\\!=", TK_NEQ},
+    {"==", TK_EQ},    // equal|
+    {"!=", TK_NEQ},
+    {"&&", TK_AND},
     {"\\+", TK_PLUS}, // plus
     {"\\-", TK_MINUS},
     {"\\*", TK_ASTERISK},
@@ -42,7 +45,7 @@ static struct rule
     {"\\$(0|[a-z][0-9])", TK_REG},
 };
 
-#define NR_REGEX 11
+#define NR_REGEX 
 static regex_t re[NR_REGEX] = {};
 
 typedef struct token
@@ -339,6 +342,12 @@ uint64_t expr(char *e, bool *success)
   {
     printf("error: bracket mismatch in expr");
     return -1;
+  }
+  for (int i = 0; i < end; i++) {
+    int pre_type = tokens[i - 1].type;
+    if (tokens[i].type == TK_ASTERISK && (i == 0 || pre_type >= TK_EQ && pre_type <= TK_NEQ)) {
+      tokens[i].type = TK_DREF;
+    }
   }
   return eval(0, end - 1);
 }
