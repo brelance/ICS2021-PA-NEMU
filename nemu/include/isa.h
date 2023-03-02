@@ -17,8 +17,7 @@ void init_isa();
 // reg
 extern CPU_state cpu;
 void isa_reg_display();
-uint64_t isa_reg_read(char *reg_name);
-word_t isa_reg_str2val(const char *name, bool *success);
+uint64_t isa_reg_str2val(const char *name, bool *success);
 
 // exec
 struct Decode;

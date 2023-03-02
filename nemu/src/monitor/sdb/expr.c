@@ -1,10 +1,9 @@
 #include <regex.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
 #include <isa.h>
 #include <common.h>
+#include <macro.h>
+#include <debug.h>
+#include "sdb.h"
 
 typedef unsigned long uint64_t;
 
@@ -21,7 +20,6 @@ enum
   TK_MINUS,    // "-"
   TK_LPAREN,   // "("
   TK_RPAREN,   // ")"
-  TK_DREF, //*a
   TK_REG, // registers
   TK_NUM, // decimal number
 };
@@ -45,7 +43,7 @@ static struct rule
     {"\\$(0|[a-z][0-9])", TK_REG},
 };
 
-#define NR_REGEX 
+#define NR_REGEX ARRLEN(rules)
 static regex_t re[NR_REGEX] = {};
 
 typedef struct token
@@ -90,7 +88,6 @@ static bool make_token(char *e)
 
   while (e[position] != '\0')
   {
-    /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i++)
     {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0)
@@ -103,10 +100,6 @@ static bool make_token(char *e)
 
         position += substr_len;
 
-        /* TODO: Now a new token is recognized with rules[i]. Add codes
-         * to record the token in the array `tokens'. For certain types
-         * of tokens, some extra actions should be performed.
-         */
         if (rules[i].token_type == TK_NOTYPE)
         {
           break;
@@ -117,49 +110,55 @@ static bool make_token(char *e)
         switch (rules[i].token_type)
         {
         case TK_EQ:
-          tokens[token_point].type = TK_EQ;
+          tokens[nr_token].type = TK_EQ;
           break;
 
         case TK_NEQ:
-          tokens[token_point].type = TK_NEQ;
+          tokens[nr_token].type = TK_NEQ;
           break;
 
         case TK_PLUS:
-          tokens[token_point].type = TK_PLUS;
+          tokens[nr_token].type = TK_PLUS;
           break;
 
         case TK_MINUS:
-          tokens[token_point].type = TK_MINUS;
+          tokens[nr_token].type = TK_MINUS;
           break;
 
         case TK_ASTERISK:
-          tokens[token_point].type = TK_ASTERISK;
+          tokens[nr_token].type = TK_ASTERISK;
           break;
 
         case TK_SLASH:
-          tokens[token_point].type = TK_SLASH;
+          tokens[nr_token].type = TK_SLASH;
           break;
 
         case TK_LPAREN:
-          tokens[token_point].type = TK_LPAREN;
+          tokens[nr_token].type = TK_LPAREN;
           break;
 
         case TK_RPAREN:
-          tokens[token_point].type = TK_RPAREN;
+          tokens[nr_token].type = TK_RPAREN;
           break;
 
         case TK_REG:
-          tokens[token_point].type = TK_ASTERISK;
+          tokens[nr_token].type = TK_ASTERISK;
+          // strncpy(tokens[nr_token].str, substr_start, substr_len);
           break;
 
         case TK_NUM:
-          tokens[token_point].type = TK_NUM;
+          tokens[nr_token].type = TK_NUM;
+          // strncpy(tokens[nr_token].str, substr_start, substr_len);
+          break;
+
+        case TK_AND:
+          tokens[nr_token].type = TK_AND;
           break;
 
         default:
           break;
         }
-        token_point++;
+        nr_token++;
         break;
       }
     }
@@ -173,7 +172,6 @@ static bool make_token(char *e)
 
   return true;
 }
-
 
 int check_parentheses(int p)
 {
@@ -239,7 +237,8 @@ uint64_t eval(int p, int q)
   else if (tokens[p].type == TK_LPAREN)
   {
     int tq = parentheses_position(p);
-    if (tq < 31 && tokens[tq + 1].type != 0 && tokens[tq + 1].type != TK_RPAREN) {
+    if (tq < 31 && tokens[tq + 1].type != 0 && tokens[tq + 1].type != TK_RPAREN)
+    {
       uint64_t num = eval(p + 1, tq - 1);
       tokens[tq].type = TK_NUM;
       sprintf(tokens[tq].str, "%lu", num);
@@ -252,31 +251,35 @@ uint64_t eval(int p, int q)
     if (tokens[p].type == TK_NUM || tokens[p].type == TK_REG)
     {
       if (tokens[p].type == TK_REG) {
-        uint64_t reg = isa_reg_read(tokens[p].str);
+        bool success = false;
+        uint64_t reg = isa_reg_str2val(tokens[p].str, &success);
         sprintf(tokens[p].str, "%lu", reg);
       }
       uint64_t num = strtoul(tokens[p].str, NULL, 10);
       printf("%lu\n", num);
       switch (tokens[p + 1].type)
       {
+      case TK_DREF:
+        // TODO:
+        break;
       case TK_PLUS:
         if (tokens[p - 1].type != TK_PLUS && tokens[p - 1].type != TK_MINUS && tokens[p - 1].type != TK_LPAREN && tokens[p - 1].type != TK_NUM)
         {
-          tokens[p - 1].type = tokens[p + 1].type;
+          tokens[p - 1].type = TK_PLUS;
           return num;
         }
         return num + eval(p + 2, q);
       case TK_MINUS:;
         if (tokens[p - 1].type != TK_PLUS && tokens[p - 1].type != TK_MINUS && tokens[p - 1].type != TK_LPAREN && tokens[p - 1].type != TK_NUM)
         {
-          tokens[p - 1].type = 0;
+          tokens[p - 1].type = TK_MINUS;
           return num;
         }
         return num - eval(p + 2, q);
       case TK_ASTERISK:
-        if (tokens[p - 1].type == TK_EQ || tokens[p - 1].type == TK_NEQ)
+        if (tokens[p - 1].type == TK_EQ || tokens[p - 1].type == TK_NEQ || tokens[p - 1].type == TK_AND)
         {
-          tokens[p - 1].type = tokens[p + 1].type;
+          tokens[p - 1].type = TK_ASTERISK;
           return num;
         }
         int anum = eval(p + 2, q);
@@ -294,9 +297,9 @@ uint64_t eval(int p, int q)
         }
         return num;
       case TK_SLASH:
-        if (tokens[p - 1].type == TK_EQ || tokens[p - 1].type == TK_NEQ)
+        if (tokens[p - 1].type == TK_EQ || tokens[p - 1].type == TK_NEQ || tokens[p - 1].type == TK_AND)
         {
-          tokens[p - 1].type = tokens[p + 1].type;
+          tokens[p - 1].type = TK_SLASH;
           return num;
         }
         int snum = eval(p + 2, q);
@@ -312,6 +315,13 @@ uint64_t eval(int p, int q)
             return num - eval(p + 4, q);
           }
         }
+      case TK_AND:
+        if (tokens[p - 1].type == TK_EQ || tokens[p - 1].type == TK_NEQ)
+        {
+          tokens[p - 1].type = tokens[p + 1].type;
+          return num;
+        }
+        return num && eval(p + 2, q);
       case TK_EQ:
         return num == eval(p + 2, q);
       case TK_NEQ:
@@ -333,21 +343,18 @@ uint64_t expr(char *e, bool *success)
     return 0;
   }
 
-  int end = 0;
-  while (tokens[end].type != 0)
-  {
-    end++;
-  }
   if (check_parentheses(0) == -1)
   {
     printf("error: bracket mismatch in expr");
     return -1;
   }
-  for (int i = 0; i < end; i++) {
+
+  for (int i = 0; i < nr_token; i++) {
     int pre_type = tokens[i - 1].type;
-    if (tokens[i].type == TK_ASTERISK && (i == 0 || pre_type >= TK_EQ && pre_type <= TK_NEQ)) {
+    if (tokens[i].type == TK_ASTERISK && (i == 0 || (pre_type >= TK_EQ && pre_type <= TK_NEQ))) {
       tokens[i].type = TK_DREF;
     }
   }
-  return eval(0, end - 1);
+
+  return eval(0, nr_token - 1);
 }
