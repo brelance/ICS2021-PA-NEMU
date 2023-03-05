@@ -8,7 +8,7 @@ def_EHelper(addi) {
 
 
 def_EHelper(jal) {
-  *ddest += s->snpc;
+  *ddest = s->snpc;
   rtl_j(s, id_src1->imm + s->pc);
 }
 
