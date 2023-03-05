@@ -30,7 +30,7 @@ static inline def_DopHelper(j) {
   op->simm |= s->isa.instr.j.simm19_12 << 12;
   op->simm |= s->isa.instr.j.simm11 << 11;
   op->simm |= s->isa.instr.j.simm10_1 << 1;
-  printf("def_DopHelper: %ld \n", op->simm);
+  printf("def_DopHelper: %lx \n", op->simm);
 }
 
 
