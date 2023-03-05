@@ -29,6 +29,7 @@ static inline def_DHelper(I) {
 }
 
 static inline def_DHelper(U) {
+  printf("立即数: %x\n", s->isa.instr.u.simm31_12);
   decode_op_i(s, id_src1, (sword_t)s->isa.instr.u.simm31_12 << 12, true);
   decode_op_r(s, id_dest, s->isa.instr.u.rd, true);
 }
