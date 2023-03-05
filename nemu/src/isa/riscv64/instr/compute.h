@@ -10,8 +10,8 @@ def_EHelper(addi) {
 def_EHelper(jal) {
   *ddest = s->snpc;
   printf("jal: %lx\n", s->snpc);
-  printf("s->pc: %lx \t id_src1->imm: %lx\n", s->pc, id_src1->imm);
-  rtl_j(s, s->pc + id_src1->imm);
+  printf("s->pc: %lx \t id_src1->imm: %lx\n", s->pc, id_src1->simm);
+  rtl_j(s, s->pc + (id_src1->imm >> 12));
 }
 
 def_EHelper(jalr) {
