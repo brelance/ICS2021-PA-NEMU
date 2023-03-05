@@ -33,7 +33,6 @@ static inline def_DopHelper(j)
   op->simm |= s->isa.instr.j.simm11 << 11;
   op->simm |= s->isa.instr.j.simm10_1 << 1;
   op->simm |= s->isa.instr.j.simm20 << 20;
-  printf("def_DopHelper: %lx \n", op->simm);
   if (s->isa.instr.j.simm20 == 1)
   {
     op->simm = op->simm -  (2 << 20);
