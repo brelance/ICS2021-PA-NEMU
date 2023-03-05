@@ -59,3 +59,8 @@ def_EHelper(bne)
     rtl_li(s, &s->dnpc, s->pc + *dsrc2);
   }
 }
+
+// riscv64_reg
+def_EHelper(addw) {
+  rtl_addw(s, ddest, dsrc1, dsrc2);
+}
