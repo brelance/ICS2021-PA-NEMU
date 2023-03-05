@@ -9,7 +9,7 @@ def_EHelper(addi) {
 
 def_EHelper(jal) {
   *ddest = s->snpc;
-  rtl_j(s, s->pc + (id_src1->imm));
+  rtl_j(s, s->pc + (id_src1->simm));
 }
 
 def_EHelper(jalr) {
