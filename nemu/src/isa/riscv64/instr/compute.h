@@ -11,3 +11,8 @@ def_EHelper(jal) {
   *ddest = s->snpc;
   rtl_j(s, s->pc + (id_src1->simm));
 }
+
+def_EHelper(jalr) {
+  *ddest = s->snpc;
+  rtl_j(s, *dsrc1 + id_src2->imm);
+}
