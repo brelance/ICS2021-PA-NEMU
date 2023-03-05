@@ -9,7 +9,7 @@ def_EHelper(addi) {
 
 def_EHelper(jal) {
   *ddest = s->snpc;
-  printf("jal: %lu\n", s->snpc);
+  printf("jal: %lx\n", s->snpc);
   rtl_j(s, s->pc + id_src1->imm);
 }
 
