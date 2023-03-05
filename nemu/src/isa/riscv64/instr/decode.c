@@ -25,12 +25,12 @@ static inline def_DopHelper(r) {
 }
 
 static inline def_DopHelper(j) {
-  op->imm = 0;
-  op->imm |= s->isa.instr.j.simm20 << 20;
-  op->imm |= s->isa.instr.j.simm19_12 << 12;
-  op->imm |= s->isa.instr.j.simm11 << 11;
-  op->imm |= s->isa.instr.j.simm10_1 << 1;
-  printf("def_DopHelper: %lx \n", op->imm);
+  op->simm = 0;
+  op->simm |= s->isa.instr.j.simm20 << 20;
+  op->simm |= s->isa.instr.j.simm19_12 << 12;
+  op->simm |= s->isa.instr.j.simm11 << 11;
+  op->simm |= s->isa.instr.j.simm10_1 << 1;
+  printf("def_DopHelper: %ld \n", op->simm);
 }
 
 
