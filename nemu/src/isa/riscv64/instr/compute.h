@@ -11,8 +11,7 @@ def_EHelper(addi)
 
 def_EHelper(sltiu)
 {
-  rtl_sub(s, ddest, dsrc1, dsrc2);
-  *ddest = *ddest < 0 ? 1 : 0;
+    *ddest = (sword_t)(*dsrc1 - id_src2->imm) < 0 ? 1 : 0;
 }
 
 def_EHelper(add)
@@ -54,14 +53,20 @@ def_EHelper(beq)
 def_EHelper(bne)
 {
   rtlreg_t temp;
-  rtl_xor(s, &temp, ddest, dsrc1);
+  rtl_xor(s, &temp, dsrc1, dsrc2);
   if (temp != 0)
   {
-    rtl_li(s, &s->dnpc, s->pc + *dsrc2);
+    rtl_li(s, &s->dnpc, s->pc + *s0);
   }
 }
 
 // riscv64_reg
 def_EHelper(addw) {
   rtl_addw(s, ddest, dsrc1, dsrc2);
+}
+
+
+// riscv64_imm
+def_EHelper(addiw) {
+  rtl_addiw(s, ddest, dsrc1, id_src2->imm);
 }
