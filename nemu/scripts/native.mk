@@ -26,10 +26,14 @@ gdb: run-env
 	$(call git_commit, "gdb")
 	gdb -s $(BINARY) --args $(NEMU_EXEC)
 
+gdbserver: run-env
+#	@echo "set args $(NEMU_EXEC)" > ./build/.gdbinit
+	gdbserver localhost:26000 $(BINARY) $(ARGS) $(IMG)
+
 clean-tools = $(dir $(shell find ./tools -maxdepth 2 -mindepth 2 -name "Makefile"))
 $(clean-tools):
 	-@$(MAKE) -s -C $@ clean
 clean-tools: $(clean-tools)
 clean-all: clean distclean clean-tools
 
-.PHONY: run gdb run-env clean-tools clean-all $(clean-tools)
+.PHONY: run gdb gdbserver run-env clean-tools clean-all $(clean-tools)

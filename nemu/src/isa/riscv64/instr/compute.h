@@ -24,6 +24,7 @@ def_EHelper(sub)
 {
   rtl_sub(s, ddest, dsrc1, dsrc2);
 }
+// src/isa/riscv64/instr/compute.h:25
 
 // branch
 def_EHelper(jal)
