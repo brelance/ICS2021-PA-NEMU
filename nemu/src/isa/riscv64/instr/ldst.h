@@ -3,7 +3,7 @@ def_EHelper(ld) {
 }
 
 def_EHelper(lw) {
-  rtl_lm(s, ddest, dsrc1, id_src2->imm, 4);
+  rtl_lms(s, ddest, dsrc1, id_src2->imm, 4);
 }
 
 
