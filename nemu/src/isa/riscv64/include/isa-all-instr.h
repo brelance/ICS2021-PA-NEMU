@@ -9,6 +9,7 @@ f(addiw) f(slli) f(srli) f(bge) f(sw) \
 f(lui) f(srai) f(mulw) f(divw) f(blt) \
 f(andi) f(slt) f(lbu) f(sb) f(or) f(bltu) \
 f(remw) f(slliw) f(srliw) f(sraiw) f(sraw) \
-f(srlw) \
+f(srlw) f(mul) f(subw) f(lh) f(lhu) f(sh) \
+f(lb) f(sllw) f(xori) \
 
 def_all_EXEC_ID();

@@ -19,11 +19,6 @@ def_EHelper(sltiu)
   *ddest = (sword_t)(*dsrc1 - id_src2->imm) < 0 ? 1 : 0;
 }
 
-def_EHelper(add)
-{
-  rtl_add(s, ddest, dsrc1, dsrc2);
-}
-
 def_EHelper(slli)
 {
   rtl_slli(s, ddest, dsrc1, id_src2->imm);
@@ -39,12 +34,22 @@ def_EHelper(srai)
   rtl_srli(s, ddest, dsrc1, id_src2->imm);
 }
 
+def_EHelper(xori)
+{
+  rtl_xori(s, ddest, dsrc1, id_src2->imm);
+}
+
 def_EHelper(andi)
 {
   rtl_andi(s, ddest, dsrc1, id_src2->imm);
 }
 
 // compute regs
+def_EHelper(add)
+{
+  rtl_add(s, ddest, dsrc1, dsrc2);
+}
+
 def_EHelper(sub)
 {
   rtl_sub(s, ddest, dsrc1, dsrc2);
@@ -58,6 +63,12 @@ def_EHelper(slt)
 def_EHelper(or)
 {
   rtl_or(s, ddest, dsrc1, dsrc2);
+}
+
+// TODO:bug 
+def_EHelper(mul)
+{
+  rtl_mulu_lo(s, ddest, dsrc1, dsrc2);
 }
 
 // branch
@@ -124,6 +135,16 @@ def_EHelper(bltu)
 def_EHelper(addw)
 {
   rtl_addw(s, ddest, dsrc1, dsrc2);
+}
+
+def_EHelper(subw)
+{
+  rtl_subw(s, ddest, dsrc1, dsrc2);
+}
+
+def_EHelper(sllw)
+{
+  rtl_sllw(s, ddest, dsrc1, dsrc2);
 }
 
 def_EHelper(srlw)
