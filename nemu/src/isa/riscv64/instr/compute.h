@@ -72,6 +72,7 @@ def_EHelper(jalr)
 {
   // *ddest = s->snpc;
   rtl_li(s, ddest, s->snpc);
+
   rtl_j(s, *dsrc1 + id_src2->imm);
 }
 
@@ -114,7 +115,8 @@ def_EHelper(bge)
 // TODO: bug to-lower-case
 def_EHelper(bltu)
 {
-  if(*dsrc1 < *dsrc2) {
+  if (*dsrc1 < *dsrc2)
+  {
     rtl_li(s, &s->dnpc, s->pc + *s0);
   }
 }
@@ -124,10 +126,35 @@ def_EHelper(addw)
   rtl_addw(s, ddest, dsrc1, dsrc2);
 }
 
+def_EHelper(srlw)
+{
+  rtl_srlw(s, ddest, dsrc1, dsrc2);
+}
+
+def_EHelper(sraw)
+{
+  rtl_sraw(s, ddest, dsrc1, dsrc2);
+}
+
 // riscv64_imm
 def_EHelper(addiw)
 {
   rtl_addiw(s, ddest, dsrc1, id_src2->imm);
+}
+
+def_EHelper(slliw)
+{
+  rtl_slliw(s, ddest, dsrc1, id_src2->imm);
+}
+
+def_EHelper(srliw)
+{
+  rtl_srliw(s, ddest, dsrc1, id_src2->imm);
+}
+
+def_EHelper(sraiw)
+{
+  rtl_sraiw(s, ddest, dsrc1, id_src2->imm);
 }
 
 // riscv64_m
