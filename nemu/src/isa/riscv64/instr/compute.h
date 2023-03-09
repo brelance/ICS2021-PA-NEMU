@@ -97,7 +97,7 @@ def_EHelper(bne)
 
 def_EHelper(blt)
 {
-  if (*dsrc1 < *dsrc2)
+  if ((sword_t)*dsrc1 < (sword_t)*dsrc2)
   {
     rtl_li(s, &s->dnpc, s->pc + *s0);
   }
@@ -105,12 +105,19 @@ def_EHelper(blt)
 
 def_EHelper(bge)
 {
-  if (*dsrc1 >= *dsrc2)
+  if ((sword_t)*dsrc1 >= (sword_t)*dsrc2)
   {
     rtl_li(s, &s->dnpc, s->pc + *s0);
   }
 }
 
+// TODO: bug to-lower-case
+def_EHelper(bltu)
+{
+  if(*dsrc1 < *dsrc2) {
+    rtl_li(s, &s->dnpc, s->pc + *s0);
+  }
+}
 // riscv64_reg
 def_EHelper(addw)
 {
@@ -132,4 +139,9 @@ def_EHelper(mulw)
 def_EHelper(divw)
 {
   rtl_divw(s, ddest, dsrc1, dsrc2);
+}
+
+def_EHelper(remw)
+{
+  rtl_remw(s, ddest, dsrc1, dsrc2);
 }
