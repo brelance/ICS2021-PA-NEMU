@@ -11,7 +11,7 @@ def_EHelper(lui)
 
 def_EHelper(addi)
 {
-  rtl_addi(s, ddest, id_src1->preg, id_src2->imm);
+  rtl_addi(s, ddest, dsrc1, id_src2->imm);
 }
 
 def_EHelper(sltiu)
@@ -60,9 +60,19 @@ def_EHelper(slt)
   *ddest = (sword_t)(*dsrc1 - *dsrc2) < 0 ? 1 : 0;
 }
 
+def_EHelper(sltu)
+{
+  *ddest = (*dsrc1 - *dsrc2) < 0 ? 1 : 0;
+}
+
 def_EHelper(or)
 {
   rtl_or(s, ddest, dsrc1, dsrc2);
+}
+
+def_EHelper(and)
+{
+  rtl_and(s, ddest, dsrc1, dsrc2);
 }
 
 // TODO:bug 
@@ -161,6 +171,7 @@ def_EHelper(sraw)
 def_EHelper(addiw)
 {
   rtl_addiw(s, ddest, dsrc1, id_src2->imm);
+  
 }
 
 def_EHelper(slliw)
@@ -192,4 +203,5 @@ def_EHelper(divw)
 def_EHelper(remw)
 {
   rtl_remw(s, ddest, dsrc1, dsrc2);
+  log_write("registers information: a4: %lu s0: %lu a5: %lu\n", *ddest, *dsrc1, *dsrc2);
 }
