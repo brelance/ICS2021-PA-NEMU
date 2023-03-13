@@ -47,5 +47,6 @@ void isa_difftest_attach();
   // for ref
 void isa_difftest_regcpy(void *dut, bool direction);
 void isa_difftest_raise_intr(word_t NO);
+void spike_reg_display(CPU_state *regs);
 
 #endif

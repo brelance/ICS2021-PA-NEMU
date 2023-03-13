@@ -125,7 +125,7 @@ int snprintf(char *out, size_t n, const char *fmt, ...)
       }
       n -= arglen;
       strncat(out, start, fmt - start - 2);
-      strcat(out, arg);
+      strcat(out, fmt_word);
       start = fmt;
     }
   }
@@ -165,7 +165,7 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap)
       n -= arglen;
 
       strncat(out, start, fmt - start - 2);
-      strcat(out, ap);
+      strcat(out, fmt_word);
       start = fmt;
     }
   }

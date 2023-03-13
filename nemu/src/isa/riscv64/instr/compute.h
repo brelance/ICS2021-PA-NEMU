@@ -16,7 +16,8 @@ def_EHelper(addi)
 
 def_EHelper(sltiu)
 {
-  *ddest = (sword_t)(*dsrc1 - id_src2->imm) < 0 ? 1 : 0;
+  *ddest = *dsrc1 < (word_t)id_src2->imm ? 1 : 0;
+  // *ddest = (sword_t)((word_t)*dsrc1 - (word_t)id_src2->imm) < 0 ? 1 : 0;
 }
 
 def_EHelper(slli)
@@ -31,7 +32,7 @@ def_EHelper(srli)
 
 def_EHelper(srai)
 {
-  rtl_srli(s, ddest, dsrc1, id_src2->imm);
+  rtl_srai(s, ddest, dsrc1, id_src2->imm);
 }
 
 def_EHelper(xori)
@@ -57,12 +58,12 @@ def_EHelper(sub)
 
 def_EHelper(slt)
 {
-  *ddest = (sword_t)(*dsrc1 - *dsrc2) < 0 ? 1 : 0;
+  *ddest = ((sword_t)*dsrc1 - (sword_t)*dsrc2) < 0 ? 1 : 0;
 }
 
 def_EHelper(sltu)
 {
-  *ddest = (*dsrc1 - *dsrc2) < 0 ? 1 : 0;
+  *ddest = (sword_t)(*dsrc1 - *dsrc2) < 0 ? 1 : 0;
 }
 
 def_EHelper(or)
@@ -141,6 +142,16 @@ def_EHelper(bltu)
     rtl_li(s, &s->dnpc, s->pc + *s0);
   }
 }
+
+def_EHelper(bgeu)
+{
+  if (*dsrc1 >= *dsrc2)
+  {
+    rtl_li(s, &s->dnpc, s->pc + *s0);
+  }
+}
+
+
 // riscv64_reg
 def_EHelper(addw)
 {

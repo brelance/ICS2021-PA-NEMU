@@ -21,7 +21,6 @@
   def_rtl_compute_imm(name) \
 
 // compute
-
 def_rtl_compute_reg_imm(add)
 def_rtl_compute_reg_imm(sub)
 def_rtl_compute_reg_imm(and)
@@ -144,7 +143,6 @@ static inline def_rtl(host_sm, void *addr, const rtlreg_t *src1, int len) {
 
 static inline def_rtl(j, vaddr_t target) {
   s->dnpc = target;
-  printf("s->dnpc: %lx\n", s->dnpc);
 }
 
 static inline def_rtl(jr, rtlreg_t *target) {

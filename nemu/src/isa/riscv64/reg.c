@@ -12,10 +12,24 @@ const char *regs[] = {
 
 void isa_reg_display()
 {
+  printf(ASNI_FG_RED);
+  printf("----NEMU register states start----\n");
   for (int idx = 0; idx < REG_NUMS; idx++)
   {
-    printf("%s: %lu \n", regs[idx], gpr(idx));
+    printf("%s: %lx\n", regs[idx], gpr(idx));
   }
+  printf("----NEME rigister states end----\n");
+}
+
+void spike_reg_display(CPU_state *refs)
+{
+  printf(ASNI_FG_GREEN);
+  printf("----Spike register states start----\n");
+  for (int idx = 0; idx < REG_NUMS; idx++)
+  {
+    printf("%s: %lx \n", regs[idx], refs->gpr[idx]._64);
+  }
+  printf("----Spike rigister states end----\n");
 }
 
 
