@@ -82,6 +82,11 @@ def_EHelper(mul)
   rtl_mulu_lo(s, ddest, dsrc1, dsrc2);
 }
 
+def_EHelper(divu)
+{
+  rtl_divu_q(s, ddest, dsrc1, dsrc2);
+}
+
 // branch
 def_EHelper(jal)
 {
